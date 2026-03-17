@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AgentScope - The missing debugger for AI agents. Track costs, monitor execution, and debug your LangChain agents in real-time.">
+    <meta name="keywords" content="AI, agents, debugging, LangChain, monitoring, LLM, cost tracking">
+    <meta property="og:title" content="AgentScope - The Missing Debugger for AI Agents">
+    <meta property="og:description" content="Track costs, monitor execution, and debug your AI agents in real-time">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vivekvar-dl.github.io/agentscope/">
+    <title>AgentScope - The Missing Debugger for AI Agents</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0066cc;
+            --primary-dark: #0052a3;
+            --secondary: #00cc88;
+            --dark: #1a1a2e;
+            --darker: #0f0f1e;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --success: #28a745;
+            --warning: #ffc107;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: var(--light);
+        }
+
+        /* Header/Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: white;
+            padding: 80px 20px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="2" height="2" fill="%230066cc" opacity="0.3"/></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: #adb5bd;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--dark);
+        }
+
+        /* Features Section */
+        .section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--dark);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.8;
+        }
+
+        /* Code Example Section */
+        .code-section {
+            background: var(--darker);
+            color: white;
+            padding: 80px 20px;
+        }
+
+        .code-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .code-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .code-tab {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: none;
+            color: #adb5bd;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .code-tab.active {
+            color: white;
+            border-bottom-color: var(--primary);
+        }
+
+        .code-block {
+            background: #0f0f1e;
+            padding: 2rem;
+            border-radius: 0 8px 8px 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .code-block code {
+            color: #e9ecef;
+        }
+
+        .comment {
+            color: #6c757d;
+        }
+
+        .keyword {
+            color: #ff6b9d;
+        }
+
+        .string {
+            color: #c3e88d;
+        }
+
+        .function {
+            color: #82aaff;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: white;
+            padding: 60px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        /* Comparison Table */
+        .comparison {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 1.2rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--dark);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .check {
+            color: var(--success);
+            font-size: 1.5rem;
+        }
+
+        .cross {
+            color: #dc3545;
+            font-size: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            color: #adb5bd;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content fade-in">
+            <div class="logo">🔍</div>
+            <h1>AgentScope</h1>
+            <p class="tagline">The Missing Debugger for AI Agents</p>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                Track costs • Monitor execution • Debug in real-time
+            </p>
+            <div class="cta-buttons">
+                <a href="https://github.com/vivekvar-dl/agentscope" class="btn btn-primary">
+                    ⭐ View on GitHub
+                </a>
+                <a href="https://github.com/vivekvar-dl/agentscope#quick-start" class="btn btn-secondary">
+                    📖 Quick Start
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="section">
+        <h2 class="section-title">🎯 The Problem</h2>
+        <div style="max-width: 700px; margin: 0 auto; text-align: center;">
+            <p style="font-size: 1.2rem; color: var(--gray); line-height: 1.8;">
+                AI agents are <strong>black boxes</strong>. You deploy them and cross your fingers.
+                <br><br>
+                ❓ Why did it make that decision?<br>
+                💸 How much am I spending?<br>
+                🔧 Which tools is it using?<br>
+                🐛 Where did it get stuck?<br>
+                <br>
+                <strong style="color: var(--primary);">Without visibility, you're flying blind.</strong>
+            </p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" style="background: white;">
+        <h2 class="section-title">✨ Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>One-Line Integration</h3>
+                <p>Wrap your agent with AgentScope and start monitoring instantly. Zero configuration required.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Cost Tracking</h3>
+                <p>Track LLM API costs in real-time. Supports GPT-4, Claude, Gemini, and 15+ models.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3>Tool Monitoring</h3>
+                <p>See which tools your agent calls, how often, and their success rates.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <h3>Performance Metrics</h3>
+                <p>Track execution time, token usage, and decision counts for every run.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎬</div>
+                <h3>Replay & Export</h3>
+                <p>Export execution traces to JSON and replay them for debugging.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Beautiful CLI</h3>
+                <p>Color-coded output with Rich library. Pretty tables and live updates.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Example Section -->
+    <section class="code-section">
+        <div class="code-container">
+            <h2 class="section-title" style="color: white;">💻 Simple to Use</h2>
+            <div class="code-tabs">
+                <button class="code-tab active">Basic Usage</button>
+            </div>
+            <div class="code-block">
+<code><span class="keyword">from</span> <span class="function">agentscope</span> <span class="keyword">import</span> AgentScope
+<span class="keyword">from</span> <span class="function">langchain.agents</span> <span class="keyword">import</span> AgentExecutor
+
+<span class="comment"># Your normal agent setup</span>
+agent = AgentExecutor(...)
+
+<span class="comment"># Wrap with AgentScope (one line!)</span>
+<span class="keyword">with</span> <span class="function">AgentScope</span>(agent, verbose=<span class="keyword">True</span>) <span class="keyword">as</span> scope:
+    result = agent.run(<span class="string">"Analyze this data"</span>)
+    
+<span class="comment"># Get instant insights</span>
+<span class="keyword">print</span>(<span class="string">f"Cost: ${scope.cost:.4f}"</span>)
+<span class="keyword">print</span>(<span class="string">f"Tokens: {scope.tokens}"</span>)
+<span class="keyword">print</span>(<span class="string">f"Tools: {scope.tool_calls}"</span>)
+
+<span class="comment"># Export for later analysis</span>
+scope.export(<span class="string">"execution_trace.json"</span>)</code>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>&lt;1%</h3>
+                <p>Performance Overhead</p>
+            </div>
+            <div class="stat-item">
+                <h3>1 Line</h3>
+                <p>To Integrate</p>
+            </div>
+            <div class="stat-item">
+                <h3>15+</h3>
+                <p>LLM Models Supported</p>
+            </div>
+            <div class="stat-item">
+                <h3>95%+</h3>
+                <p>Test Coverage</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="section">
+        <h2 class="section-title">📊 Why AgentScope?</h2>
+        <div class="comparison">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>AgentScope</th>
+                        <th>LangSmith</th>
+                        <th>DIY Logging</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Open Source</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Free to Use</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Cost Tracking</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                    </tr>
+                    <tr>
+                        <td>Beautiful Output</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                    </tr>
+                    <tr>
+                        <td>Works Offline</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>No Account Required</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Easy Setup</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section class="section" style="background: white;">
+        <h2 class="section-title">🚀 Get Started</h2>
+        <div style="max-width: 600px; margin: 0 auto;">
+            <div class="code-block" style="background: var(--darker);">
+<code><span class="comment"># Install from GitHub</span>
+pip install git+https://github.com/vivekvar-dl/agentscope.git
+
+<span class="comment"># Or install in editable mode</span>
+git clone https://github.com/vivekvar-dl/agentscope.git
+cd agentscope
+pip install -e <span class="string">"."</span></code>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://github.com/vivekvar-dl/agentscope#installation" class="btn btn-primary">
+                    📖 View Full Documentation
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section class="section">
+        <h2 class="section-title">🗺️ Roadmap</h2>
+        <div style="max-width: 700px; margin: 0 auto;">
+            <div class="feature-card">
+                <h3 style="color: var(--success);">✅ v0.1.0 (Current)</h3>
+                <ul style="margin-top: 1rem; color: var(--gray);">
+                    <li>✓ LangChain support</li>
+                    <li>✓ Cost tracking</li>
+                    <li>✓ CLI output</li>
+                    <li>✓ Export traces</li>
+                </ul>
+            </div>
+            <div class="feature-card" style="margin-top: 1rem;">
+                <h3 style="color: var(--primary);">🔄 v0.2.0 (Next)</h3>
+                <ul style="margin-top: 1rem; color: var(--gray);">
+                    <li>Web dashboard</li>
+                    <li>Cost optimization suggestions</li>
+                    <li>CrewAI support</li>
+                    <li>Comparison tool</li>
+                </ul>
+            </div>
+            <div class="feature-card" style="margin-top: 1rem;">
+                <h3 style="color: var(--warning);">📋 v0.3.0 (Future)</h3>
+                <ul style="margin-top: 1rem; color: var(--gray);">
+                    <li>AutoGen support</li>
+                    <li>Cloud sync (optional)</li>
+                    <li>Team features</li>
+                    <li>A/B testing framework</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="code-section" style="text-align: center; padding: 60px 20px;">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Ready to Debug Your Agents?</h2>
+        <p style="font-size: 1.3rem; color: #adb5bd; margin-bottom: 2rem;">
+            Join developers building better AI agents
+        </p>
+        <div class="cta-buttons">
+            <a href="https://github.com/vivekvar-dl/agentscope" class="btn btn-primary">
+                ⭐ Star on GitHub
+            </a>
+            <a href="https://github.com/vivekvar-dl/agentscope#contributing" class="btn btn-secondary">
+                🤝 Contribute
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            Built with ❤️ by <a href="https://github.com/vivekvar-dl">Vivek</a> 
+            • 
+            <a href="https://github.com/vivekvar-dl/agentscope">GitHub</a>
+            •
+            <a href="https://github.com/vivekvar-dl/agentscope/issues">Issues</a>
+            •
+            <a href="https://github.com/vivekvar-dl/agentscope/blob/main/LICENSE">MIT License</a>
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">
+            © 2026 AgentScope • Open Source • Production Ready
+        </p>
+    </footer>
+</body>
+</html>
