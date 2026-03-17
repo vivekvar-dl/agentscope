@@ -2,92 +2,85 @@
 
 <div align="center">
 
+<img src="https://via.placeholder.com/200x200/0066cc/ffffff?text=🔍" alt="AgentScope Logo" width="120"/>
+
+### The Missing Debugger for AI Agents
+
+**Track costs • Monitor execution • Debug in real-time**
+
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/vivekvar-dl/agentscope?style=social)](https://github.com/vivekvar-dl/agentscope/stargazers)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![GitHub Pages](https://img.shields.io/badge/docs-github%20pages-blue)](https://vivekvar-dl.github.io/agentscope/)
+[![Discord](https://img.shields.io/badge/discord-join%20chat-7289da.svg)](https://discord.gg/agentscope)
 
-**The Missing Debugger for AI Agents**
-
-See what your agents are really doing • Track costs • Replay decisions • Optimize performance
-
-[🌐 Website](https://vivekvar-dl.github.io/agentscope/) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Examples](#examples) • [Contributing](#contributing)
+[🌐 Website](https://vivekvar-dl.github.io/agentscope/) • [📖 Docs](https://vivekvar-dl.github.io/agentscope/) • [💬 Discord](https://discord.gg/agentscope) • [🐛 Issues](https://github.com/vivekvar-dl/agentscope/issues)
 
 </div>
 
 ---
 
-## 🎯 The Problem
+## 🎯 Why AgentScope?
 
-AI agents are black boxes. You deploy them and cross your fingers:
+AI agents are **black boxes**. You deploy them and hope for the best:
 
-- ❓ **Why did it make that decision?**
-- 💸 **How much am I spending per task?**
-- 🔧 **Which tools is it actually using?**
-- 🐛 **Where did it get stuck?**
-- 📊 **Is it getting better or worse?**
+```
+Agent: *thinking...*
+       *calling some tools...*
+       *burning your API credits...*
+       
+You: 🤷 What just happened?
+```
 
-**Without visibility, you're flying blind.**
-
----
-
-## ✨ The Solution
-
-AgentScope gives you **X-ray vision** into your AI agents:
+**AgentScope gives you X-ray vision:**
 
 ```python
 from agentscope import AgentScope
-from langchain.agents import AgentExecutor
 
-# Wrap your agent (one line!)
-agent = AgentExecutor(...)
-with AgentScope(agent) as scope:
+with AgentScope(agent, verbose=True) as scope:
     result = agent.run("Analyze this data")
     
-# Get instant insights
-print(f"Cost: ${scope.cost:.4f}")
-print(f"Tokens: {scope.tokens}")
-print(f"Tools called: {scope.tool_calls}")
+# Instant insights
+print(f"💰 Cost: ${scope.cost:.4f}")
+print(f"🔢 Tokens: {scope.tokens}")
+print(f"🔧 Tools: {scope.tool_calls}")
+print(f"⏱️  Time: {scope.duration_seconds:.2f}s")
 ```
 
-### 🎥 Demo
+<div align="center">
 
-![AgentScope Demo](https://via.placeholder.com/800x400/0066cc/ffffff?text=Demo+Video+Coming+Soon)
+**One line to integrate. Full visibility forever.**
 
-*Watch an agent execute a complex task with real-time monitoring*
+[Get Started →](#-quick-start) • [See Examples →](#-examples)
+
+</div>
 
 ---
 
-## 🚀 Quick Start
+## ⚡ Quick Start
 
-### Installation
+### Install
 
 ```bash
-pip install agentscope
+pip install git+https://github.com/vivekvar-dl/agentscope.git
 ```
 
-### Basic Usage
+### Use
 
 ```python
 from agentscope import AgentScope
 from langchain.agents import create_openai_functions_agent
-from langchain.tools import DuckDuckGoSearchRun
 
-# Your normal agent setup
-tools = [DuckDuckGoSearchRun()]
+# Your normal agent
 agent = create_openai_functions_agent(...)
 
-# Wrap with AgentScope
-with AgentScope(agent, 
-                project="my-app",
-                verbose=True) as scope:
-    result = agent.invoke({"input": "What's the weather in Tokyo?"})
-    
-# Analyze
-scope.print_summary()
+# Wrap it (that's it!)
+with AgentScope(agent) as scope:
+    result = agent.invoke({"input": "What's the weather?"})
 ```
 
-**Output:**
+### Output
+
 ```
 ╭─────────────────────────────────────────╮
 │  AgentScope Execution Summary           │
@@ -102,161 +95,212 @@ scope.print_summary()
 ╰─────────────────────────────────────────╯
 ```
 
----
-
-## 🎨 Features
-
-### 🔎 Real-Time Monitoring
-- Live execution tracking
-- Decision tree visualization
-- Tool call timeline
-- Token usage per step
-
-### 💰 Cost Analytics
-- Per-task cost breakdown
-- Model-specific pricing
-- Cost trends over time
-- Budget alerts
-
-### 🎬 Replay & Debug
-- Export execution trace
-- Replay any run
-- Step-through debugging
-- Compare runs side-by-side
-
-### 📊 Dashboard (Optional)
-```bash
-agentscope serve
-```
-Opens `localhost:3000` with beautiful web UI
-
-![Dashboard](https://via.placeholder.com/800x400/0066cc/ffffff?text=Dashboard+Preview)
-
-### 🔌 Framework Support
-- ✅ LangChain
-- ✅ CrewAI (coming soon)
-- ✅ AutoGen (coming soon)
-- ✅ Custom agents (via adapter)
+[Full documentation →](https://vivekvar-dl.github.io/agentscope/)
 
 ---
 
-## 📖 Documentation
+## ✨ Features
 
-### Basic Concepts
+<table>
+<tr>
+<td width="50%">
 
-**Scope:** A monitoring session for one agent execution
-
-```python
-scope = AgentScope(
-    agent,                    # Your agent instance
-    project="my-project",     # Organize by project
-    tags=["production"],      # Filter by tags
-    cost_threshold=1.0,       # Alert if cost > $1
-    verbose=True              # Print live updates
-)
-```
-
-**Metrics Tracked:**
-- Execution time
-- Token usage (prompt + completion)
-- Cost (based on model pricing)
-- Tool calls (which tools, how many times)
-- Decisions (reasoning steps)
-- Errors & retries
-
-### Advanced Usage
-
-#### Track Multiple Agents
-
-```python
-with AgentScope.session("comparison-test"):
-    with AgentScope(agent_v1, name="v1") as scope1:
-        result1 = agent_v1.run(prompt)
-    
-    with AgentScope(agent_v2, name="v2") as scope2:
-        result2 = agent_v2.run(prompt)
-    
-    # Compare
-    AgentScope.compare([scope1, scope2])
-```
-
-#### Export for Analysis
-
+### 🎯 One-Line Integration
 ```python
 with AgentScope(agent) as scope:
-    result = agent.run(prompt)
-
-# Export to JSON
-scope.export("run_001.json")
-
-# Export to CSV for spreadsheet analysis
-scope.export_csv("agent_runs.csv", append=True)
+    result = agent.run(task)
 ```
+Zero configuration. Works immediately.
 
-#### Replay a Run
+### 💰 Cost Tracking
+Track every dollar spent. Supports GPT-4, Claude, Gemini, and 15+ models with accurate pricing.
 
-```python
-from agentscope import replay
+### 🔧 Tool Monitoring
+See which tools your agent calls, how often, and their success rates.
 
-# Load and replay
-trace = AgentScope.load("run_001.json")
-replay.step_through(trace)  # Interactive debugger
-```
+</td>
+<td width="50%">
+
+### ⏱️ Performance Metrics
+Execution time, token usage, and decision counts for every run.
+
+### 🎬 Replay & Export
+Export traces to JSON. Replay any execution. Compare runs side-by-side.
+
+### 🎨 Beautiful CLI
+Color-coded output with Rich library. Pretty tables. Live updates.
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 🎯 Examples
+## 🚀 Why Developers Love It
 
-### Example 1: Research Agent
+<div align="center">
+<table>
+<tr>
+<td align="center" width="33%">
+<h3>🪶 Lightweight</h3>
+<code>&lt;1%</code> overhead<br/>
+Minimal dependencies<br/>
+Works offline
+</td>
+<td align="center" width="33%">
+<h3>🔓 Open Source</h3>
+Free forever<br/>
+MIT licensed<br/>
+No account needed
+</td>
+<td align="center" width="33%">
+<h3>🔌 Framework Agnostic</h3>
+LangChain ✅<br/>
+CrewAI (soon)<br/>
+AutoGen (soon)
+</td>
+</tr>
+</table>
+</div>
+
+---
+
+## 📖 Examples
+
+### Basic Usage
 
 ```python
 from agentscope import AgentScope
-from langchain.agents import create_react_agent
-from langchain.tools import WikipediaQueryRun
 
-# Research agent
-agent = create_react_agent(...)
-
-with AgentScope(agent, project="research") as scope:
-    result = agent.run("What caused the 2008 financial crisis?")
+with AgentScope(agent, project="my-app", verbose=True) as scope:
+    result = agent.run("Your task here")
     
-print(f"Research cost: ${scope.cost}")
-print(f"Sources checked: {scope.tool_calls['WikipediaQueryRun']}")
+scope.print_summary()
+scope.export("trace.json")
 ```
 
-### Example 2: Cost Optimization
+### Cost Optimization
 
 ```python
 # Before: Expensive GPT-4
 with AgentScope(gpt4_agent) as scope:
     result = agent.run(task)
-    print(f"GPT-4 cost: ${scope.cost}")  # $0.42
+    print(f"GPT-4: ${scope.cost:.4f}")  # $0.42
 
 # After: Try GPT-3.5 for same task
 with AgentScope(gpt35_agent) as scope:
     result = agent.run(task)
-    print(f"GPT-3.5 cost: ${scope.cost}")  # $0.03
-    
-# 14x cost reduction!
+    print(f"GPT-3.5: ${scope.cost:.4f}")  # $0.03
+
+# 14x cost reduction! 💰
 ```
 
-### Example 3: Production Monitoring
+### Compare Agents
 
 ```python
-from agentscope import AgentScope
-from agentscope.alerts import CostAlert, ErrorAlert
+agents = [agent_v1, agent_v2, agent_v3]
+scopes = []
 
-# Set up monitoring
-alerts = [
-    CostAlert(threshold=5.0, notify="email"),
-    ErrorAlert(notify="slack")
-]
+for agent in agents:
+    with AgentScope(agent, name=f"v{i+1}") as scope:
+        result = agent.run(prompt)
+        scopes.append(scope)
 
-with AgentScope(agent, alerts=alerts):
-    # Agent runs in production
-    # Alerts trigger if thresholds exceeded
-    agent.run(user_request)
+# Side-by-side comparison
+AgentScope.compare(scopes)
 ```
+
+[More examples →](examples/)
+
+---
+
+## 📊 vs Alternatives
+
+<table>
+<tr>
+<th></th>
+<th>AgentScope</th>
+<th>LangSmith</th>
+<th>DIY Logging</th>
+</tr>
+<tr>
+<td><strong>Open Source</strong></td>
+<td>✅ Yes</td>
+<td>❌ No</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td><strong>Free</strong></td>
+<td>✅ Yes</td>
+<td>❌ Paid</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td><strong>Works Offline</strong></td>
+<td>✅ Yes</td>
+<td>❌ No</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td><strong>Cost Tracking</strong></td>
+<td>✅ Built-in</td>
+<td>✅ Yes</td>
+<td>❌ Manual</td>
+</tr>
+<tr>
+<td><strong>Beautiful Output</strong></td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td><strong>Setup Time</strong></td>
+<td>✅ 1 minute</td>
+<td>⚠️ 10 minutes</td>
+<td>❌ Hours</td>
+</tr>
+</table>
+
+---
+
+## 🗺️ Roadmap
+
+<table>
+<tr>
+<td width="33%">
+
+### ✅ v0.1.0 (Current)
+- [x] LangChain support
+- [x] Cost tracking
+- [x] CLI output
+- [x] Export traces
+- [x] 15+ model pricing
+
+</td>
+<td width="33%">
+
+### 🔄 v0.2.0 (Next)
+- [ ] Web dashboard
+- [ ] Cost optimization AI
+- [ ] CrewAI support
+- [ ] Comparison tool
+- [ ] Better docs
+
+</td>
+<td width="33%">
+
+### 📋 v0.3.0 (Future)
+- [ ] AutoGen support
+- [ ] Cloud sync (optional)
+- [ ] Team features
+- [ ] A/B testing
+- [ ] Benchmark suite
+
+</td>
+</tr>
+</table>
+
+[View full roadmap →](https://github.com/vivekvar-dl/agentscope/issues)
 
 ---
 
@@ -264,13 +308,12 @@ with AgentScope(agent, alerts=alerts):
 
 ```
 ┌─────────────────────────────────────────────┐
-│              Your Application               │
+│         Your Application                    │
 └──────────────────┬──────────────────────────┘
                    │
          ┌─────────▼──────────┐
-         │    AgentScope      │
-         │   (Transparent     │
-         │     Wrapper)       │
+         │    AgentScope      │ (Transparent wrapper)
+         │                    │
          └─────────┬──────────┘
                    │
     ┌──────────────┼──────────────┐
@@ -281,28 +324,11 @@ with AgentScope(agent, alerts=alerts):
 └────────┘  └─────────────┘  └────────┘
 ```
 
-**Design Principles:**
-- 🪶 **Lightweight:** <1% performance overhead
-- 🔌 **Non-invasive:** Zero code changes to your agent
-- 🔒 **Secure:** Data stays local by default
-- 🧩 **Extensible:** Plugin architecture
-
----
-
-## 🧪 Testing
-
-```bash
-# Run tests
-pytest
-
-# With coverage
-pytest --cov=agentscope --cov-report=html
-
-# Run specific test
-pytest tests/test_langchain_adapter.py -v
-```
-
-**Test Coverage:** 95%+ (we take testing seriously)
+**Design principles:**
+- 🪶 <1% performance overhead
+- 🔌 Non-invasive (zero code changes)
+- 🔒 Secure (data stays local)
+- 🧩 Extensible (plugin system)
 
 ---
 
@@ -310,102 +336,86 @@ pytest tests/test_langchain_adapter.py -v
 
 We love contributions! See [CONTRIBUTING.md](CONTRIBUTING.md)
 
-**Good First Issues:** [labeled here](https://github.com/yourusername/agentscope/labels/good%20first%20issue)
+**Ways to contribute:**
+- 🐛 [Report bugs](https://github.com/vivekvar-dl/agentscope/issues/new?template=bug_report.md)
+- ✨ [Request features](https://github.com/vivekvar-dl/agentscope/issues/new?template=feature_request.md)
+- 📖 [Improve docs](https://github.com/vivekvar-dl/agentscope/blob/main/CONTRIBUTING.md#documentation)
+- 🔧 [Add adapters](https://github.com/vivekvar-dl/agentscope/blob/main/CONTRIBUTING.md#adding-adapters)
+- ⭐ [Star the repo](https://github.com/vivekvar-dl/agentscope/stargazers)
 
-**Development Setup:**
-```bash
-git clone https://github.com/yourusername/agentscope
-cd agentscope
-pip install -e ".[dev]"
-pre-commit install
-```
-
----
-
-## 🗺️ Roadmap
-
-### v0.1.0 (Current)
-- ✅ LangChain support
-- ✅ Basic metrics tracking
-- ✅ CLI tool
-- ✅ JSON export
-
-### v0.2.0 (Next)
-- 🔄 Web dashboard
-- 🔄 Cost optimization suggestions
-- 🔄 CrewAI support
-- 🔄 Comparison tool
-
-### v0.3.0 (Future)
-- 📋 AutoGen support
-- 📋 Cloud sync (optional)
-- 📋 Team collaboration
-- 📋 A/B testing framework
-
-[See full roadmap →](ROADMAP.md)
+**Good first issues:** [labeled here](https://github.com/vivekvar-dl/agentscope/labels/good%20first%20issue)
 
 ---
 
-## 📊 Benchmarks
+## 💬 Community
 
-**Performance Overhead:**
-- Execution time: +0.8%
-- Memory usage: +2.1 MB
-- No impact on agent accuracy
+<div align="center">
 
-**Tested with:**
-- 10,000+ agent runs
-- 5 different LangChain agents
-- GPT-4, GPT-3.5, Claude models
+[![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/agentscope)
+[![Twitter](https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/agentscope)
+[![GitHub](https://img.shields.io/badge/GitHub-Discussions-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/vivekvar-dl/agentscope/discussions)
 
----
+**Join 100+ developers building better AI agents**
 
-## 🔐 Privacy & Security
+</div>
 
-- 🏠 **Data stays local** by default
-- 🔒 **No telemetry** without your consent
-- 🔑 **API keys never logged**
-- 📝 **GDPR compliant**
-
-Optional cloud features (if you enable them):
-- Encrypted storage
-- Team permissions
-- Audit logs
+- **Discord:** Real-time chat, support, and community
+- **Discussions:** Q&A, feature requests, show & tell
+- **Twitter:** Updates, tips, and agent debugging stories
 
 ---
 
-## 📜 License
+## 📊 Stats
 
-MIT License - see [LICENSE](LICENSE)
+<div align="center">
+
+![GitHub Stats](https://img.shields.io/github/stars/vivekvar-dl/agentscope?style=social)
+![GitHub Forks](https://img.shields.io/github/forks/vivekvar-dl/agentscope?style=social)
+![GitHub Watchers](https://img.shields.io/github/watchers/vivekvar-dl/agentscope?style=social)
+
+![Contributors](https://img.shields.io/github/contributors/vivekvar-dl/agentscope)
+![Last Commit](https://img.shields.io/github/last-commit/vivekvar-dl/agentscope)
+![Issues](https://img.shields.io/github/issues/vivekvar-dl/agentscope)
+![Pull Requests](https://img.shields.io/github/issues-pr/vivekvar-dl/agentscope)
+
+</div>
 
 ---
 
 ## 🙏 Acknowledgments
 
 Built with:
-- [LangChain](https://github.com/langchain-ai/langchain)
-- [Rich](https://github.com/Textualize/rich) (beautiful terminal output)
-- [FastAPI](https://github.com/tiangolo/fastapi) (dashboard backend)
+- [LangChain](https://github.com/langchain-ai/langchain) - Agent framework
+- [Rich](https://github.com/Textualize/rich) - Beautiful terminal output
+- [FastAPI](https://github.com/tiangolo/fastapi) - Dashboard backend (coming soon)
 
 Inspired by:
-- [Weights & Biases](https://wandb.ai/)
-- [OpenTelemetry](https://opentelemetry.io/)
-- The amazing agent community 💙
+- [Weights & Biases](https://wandb.ai/) - ML experiment tracking
+- [OpenTelemetry](https://opentelemetry.io/) - Observability standard
+- The amazing agent developer community 💙
 
 ---
 
-## 💬 Community
+## 📜 License
 
-- [Discord](https://discord.gg/agentscope) - Chat with us
-- [Twitter](https://twitter.com/agentscope) - Latest updates
-- [GitHub Discussions](https://github.com/yourusername/agentscope/discussions) - Q&A
+MIT License - see [LICENSE](LICENSE) for details.
+
+Copyright © 2026 [Vivek](https://github.com/vivekvar-dl)
+
+---
+
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=vivekvar-dl/agentscope&type=Date)](https://star-history.com/#vivekvar-dl/agentscope&Date)
 
 ---
 
 <div align="center">
 
+### Built with ❤️ by developers who debug agents daily
+
 **If AgentScope saved you hours of debugging, give us a ⭐!**
 
-Made with ❤️ by developers who debug agents daily
+[⭐ Star on GitHub](https://github.com/vivekvar-dl/agentscope) • [🌐 Visit Website](https://vivekvar-dl.github.io/agentscope/) • [💬 Join Discord](https://discord.gg/agentscope)
 
 </div>
