@@ -5,12 +5,13 @@
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![GitHub Pages](https://img.shields.io/badge/docs-github%20pages-blue)](https://vivekvar-dl.github.io/agentscope/)
 
 **The Missing Debugger for AI Agents**
 
 See what your agents are really doing • Track costs • Replay decisions • Optimize performance
 
-[Quick Start](#quick-start) • [Documentation](#documentation) • [Examples](#examples) • [Contributing](#contributing)
+[🌐 Website](https://vivekvar-dl.github.io/agentscope/) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Examples](#examples) • [Contributing](#contributing)
 
 </div>
 
